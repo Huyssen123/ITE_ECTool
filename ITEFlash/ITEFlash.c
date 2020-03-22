@@ -1,8 +1,9 @@
-#define   TOOLVER   "V1.0"
-//===========================================================================
+#define Tool_Version      "2.5"
+#define Tool_Vendor       "ITE"
+//==============================================================================
 // V1.0
-// 1. 
-//===========================================================================
+// 1. First release
+//==============================================================================
 
 /* Copyright (c) 2011-2099, ZXQ CO. LTD. All rights reserved.
    This application For ITE EC Flash function
@@ -20,7 +21,7 @@
 // Using VS2012 X86 cmd tool to compilation
 // For windows-32/64bit
 
-//=======================================Include file ==============================================
+//===============================Include file ==================================
 
 #include <Uefi.h>
 #include <Library/UefiLib.h>
@@ -58,13 +59,9 @@ EFI_FILE_PROTOCOL *BKFileHandle=0;
 
 #define STALL_MS  1000
 #define Delay_TIME_MS  1000
+//============================Include file end==================================
 
-/**************************TYPE define**************************************************/
-#define Version      "2.4"
-#define Vendor       "ITE"
-/**************************TYPE define end**********************************************/
-
-/**************************Variable define**********************************************/
+//**************************Variable define*************************************
 UINT8 SPIFlashID[5];
 UINT8 *str1;
 UINT8 *str2;
@@ -78,9 +75,9 @@ UINT8  UpdateFlashFlag=0;  // Default is not reset
 
 FILE   *pECFile;
 FILE   *pBackFile;
-/**************************Variable define end******************************************/
+//**************************Variable define end*********************************
 
-/***************************The Command of EC addition SPI Flash************************/
+//*****************The Command of EC addition SPI Flash*************************
 // commonly used
 #define SPICmd_WRSR            0x01   // Write Status Register
 #define SPICmd_PageProgram     0x02   // To Program Page, 1-256 bytes data to be programmed
@@ -106,9 +103,9 @@ FILE   *pBackFile;
 #define SPICmd_1KSectorErase   0xD7    // Sector Erase, 1K bytes
 #define SPICmd_AAIBytePro      0xAF
 #define SPICmd_AAIWordPro      0xAD
-/****************************************************************************************/
+//******************************************************************************
 
-/***************************The Flash manufacturer ID************************************/
+//***************************The Flash manufacturer ID**************************
 #define SSTID                   0xBF
 #define WinbondID               0xEF  // Verification
 #define AtmelID                 0x9F
@@ -121,7 +118,7 @@ FILE   *pBackFile;
 #define PMCID                   0x7F  // Verification
 #define GDID                    0xC8  // Verification
 #define ITEID                   0xFF  // Verification
-/****************************************************************************************/
+//******************************************************************************
 typedef struct SPIDeviceInfo
 {
     UINT8 device_id;
@@ -182,9 +179,9 @@ struct SPIFlashIDInfo  aSPIFlashIDInfo[]=
     {   ITEID,      "ITE"        , (pSPIDeviceInfo)&ITEFlash},
     {   0x00,       NULL,  NULL}
 };
-/****************************************************************************************/
+//******************************************************************************
 
-/****************************************PM channel**************************************/
+//*******************************PM channel*************************************
 UINT8 PM_STATUS_PORT66          =0x66;
 UINT8 PM_CMD_PORT66             =0x66;
 UINT8 PM_DATA_PORT62            =0x62;
@@ -240,8 +237,9 @@ UINT8 ECRAMReadByte_PM(UINT8 index)
     Send_data_by_PM(index);
     return Read_data_from_PM();
 }
-/****************************************PM channel end************************************/
-/****************************************Flash operation-interface*************************/
+//******************************PM channel end**********************************
+
+//*****************************Flash operation-interface************************
 #define  _EnterFollowMode   0x01
 #define  _ExitFollowMode    0x05
 #define  _SendCmd           0x02
@@ -319,8 +317,9 @@ void FlashStatusRegWriteEnable(void)
     SendCmdToFlash(SPICmd_EWSR);
 
 }
-/******************************************************************************************/
-/******************************************************************************************/
+//******************************************************************************
+
+//******************************************************************************
 void Read_SPIFlash_JEDEC_ID(void)
 {
     UINT8 index;
@@ -450,6 +449,7 @@ void Flash_BackUp(void)
     fclose(pBackFile);
 }
 
+//========================ITE eFlash Erase======================================
 // For ITE e-flash
 void Block_1K_Erase(UINT8 addr2,UINT8 addr1,UINT8 addr0)
 {
@@ -524,7 +524,9 @@ UINT8 ITE_eFlash_Erase_Verify(void)
     Print(L"   -- Verify OK. \n\n");
     return(TRUE);
 }
+//==============================================================================
 
+//========================SPI eFlash Erase======================================
 // If SPI flash support chip erase command
 // send this command to erase all flash
 void Erase_Flash(void)
@@ -636,6 +638,7 @@ UINT8 Erase_Flash_Verify()
     Print(L"   -- Verify OK. \n\n");
     return(TRUE);
 }
+//==============================================================================
 
 // Read EC file to memory
 // fopen() and fread() Must be within the same function
@@ -688,6 +691,7 @@ UINT8 Read_ECFile_ToBuf(UINT8 *FileName)
     return(TRUE);
 }
 
+//========================ITE eFlash program====================================
 // Only for 128KB ITE eFlash program
 // e-Flash program:
 // 1. send start address
@@ -759,7 +763,7 @@ void ITE_eFlash_Program(void)
     FlashWriteDisable();
     Print(L"   -- Programing OK. \n\n");
 }
-
+//==============================================================================
 
 // SPI program 
 void Program_Flash(void)
@@ -879,7 +883,7 @@ UINT8 Program_Flash_Verify(void)
 
     for(counter=0x0000;counter<0x8000;counter++)
     {
-        if(ReadByteFromFlash()!=str2[counter]) //verify Byte is all 0xFF, otherwise  error
+        if(ReadByteFromFlash()!=str2[counter]) //verify Byte
         {
             WaitFlashFree();
             Print(L" -- Verify Fail. \n");
@@ -905,7 +909,7 @@ UINT8 Program_Flash_Verify(void)
 
         for(counter=0x0000;counter<0x8000;counter++)
         {
-            if(ReadByteFromFlash()!=str4[counter]) //verify Byte is all 0xFF, otherwise  error
+            if(ReadByteFromFlash()!=str4[counter]) //verify Byte
             {
                 WaitFlashFree();
                 Print(L" -- Verify Fail. \n");
@@ -924,9 +928,9 @@ UINT8 Program_Flash_Verify(void)
 void Show_Version(void)
 {
   printf("*************************************************************\n");
-  printf("**            EC Flash Utility Version : %s               **\n",Version);
+  printf("**            EC Flash Utility Version : %s               **\n",Tool_Version);
   printf("**                                                         **\n");
-  printf("**      (C)Copyright %s Telecom Technology Co.,Ltd     **\n",Vendor);
+  printf("**      (C)Copyright %s Telecom Technology Co.,Ltd        **\n",Tool_Vendor);
   printf("**                 All Rights Reserved.                    **\n");
   printf("**                                                         **\n");
   printf("**                 Modified by Morgen                      **\n");
@@ -941,8 +945,8 @@ int main(int Argc, char **Argv)
     if (Argc == 1)
     {
         printf("=======================================================\n");
-        printf("=         ITE EC Flash Utility Version : %s          =\n",Version);
-        printf("**      (C)Copyright %s Telecom Technology Co.,Ltd     **\n",Vendor);
+        printf("=         ITE EC Flash Utility Version : %s          =\n",Tool_Version);
+        printf("=     (C)Copyright %s Telecom Technology Co.,Ltd     =\n",Tool_Vendor);
         printf("=                 All Rights Reserved.                =\n");
         printf("=                             --%s           =\n", __DATE__);
         printf("=                                                     =\n");
