@@ -402,8 +402,8 @@ void ClearToolCursor()
 //EC_ReadByte_PM
 //EC_WriteByte_PM
 
-#define  EC_RAM_WRITE  ECRamWrite_Direct
-#define  EC_RAM_READ   ECRamRead_Direct
+#define  EC_RAM_WRITE  EC_WriteByte_DeIO
+#define  EC_RAM_READ   EC_ReadByte_DeIO
 
 //==================================================================================================
 

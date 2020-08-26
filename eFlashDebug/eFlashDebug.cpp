@@ -9,7 +9,7 @@
 // 1. Add eFlash Debug config file creat and modify
 //*****************************************
 
-/* Copyright (C)Copyright 2005-2020 ZXQ Telecom. All rights reserved.
+/* Copyright (C)Copyright 2005-2020 ITE Telecom. All rights reserved.
 
    Author: Morgen Zhu
    
@@ -431,7 +431,7 @@ void ClearToolCursor()
 //=======================================Tool info==================================================
 #define  TOOLS_NAME  "eFlashDebug"
 #define  ITE_IC      "ITE8987"
-#define  CopyRight   "(C)Copyright 2005-2020 ZXQ Telecom."
+#define  CopyRight   "(C)Copyright 2005-2020 ITE Telecom."
 #define  TOOLS_AUTHOR "Morgen(zxqchongchi@gmail.com)"
 #define  DEBUG       0
 #define  ESC         0x1B
@@ -559,6 +559,11 @@ void help(void)
 //      3. This tool read flag is 0x55, and then read 256Byte from EC RAM
 //      4. Repeat the above steps 1-3
 //==================================================================================================
+#define BLOCK_INDEX_ADDR  0x983
+#define PAGE_INDEX_ADDR   0x984
+#define READ_FLAG_ADDR    0x985
+#define SIP_256BYTE_ADDR  0xC00
+
 void Read_eFlashData(void)
 {
     char tmp[64];
@@ -580,17 +585,17 @@ void Read_eFlashData(void)
     // read data
     for(eFlash_Current_Blcok=0; eFlash_Current_Blcok<4; eFlash_Current_Blcok++)
     {
-        EC_RAM_WRITE(0x983, eFlash_Current_Blcok);
+        EC_RAM_WRITE(BLOCK_INDEX_ADDR, eFlash_Current_Blcok);
         for(eFlash_Current_Page=0; eFlash_Current_Page<4; eFlash_Current_Page++)
         {
-            EC_RAM_WRITE(0x984, eFlash_Current_Page);
-            EC_RAM_WRITE(0x985, 0xAA); // Flag EC to start read eFlash
+            EC_RAM_WRITE(PAGE_INDEX_ADDR, eFlash_Current_Page);
+            EC_RAM_WRITE(READ_FLAG_ADDR, 0xAA); // Flag EC to start read eFlash
             
             // wait EC read eFlash
             while(1)
             {
                 _sleep(SetTime);   // millisecond
-                if(0x55==EC_RAM_READ(0x985))
+                if(0x55==EC_RAM_READ(READ_FLAG_ADDR))
                 {
                     break;
                 }
@@ -599,7 +604,7 @@ void Read_eFlashData(void)
             // read eFlash data from EC RAM
             for(eFlash_Current_Index=0; eFlash_Current_Index<256; eFlash_Current_Index++)
             {
-                eFlah_PageData[eFlash_Current_Index] = EC_RAM_READ(0xC00+eFlash_Current_Index);
+                eFlah_PageData[eFlash_Current_Index] = EC_RAM_READ(SIP_256BYTE_ADDR+eFlash_Current_Index);
             }
             
             fwrite(eFlah_PageData,1,256,Binary_LogFile);
@@ -611,7 +616,7 @@ void Read_eFlashData(void)
         }
     }
     
-    EC_RAM_WRITE(0x985, 0x00); // Flag EC to stop read eFlash
+    EC_RAM_WRITE(READ_FLAG_ADDR, 0x00); // Flag EC to stop read eFlash
     
     printf("\nDump eFlash Log OK!\n\n");
     
