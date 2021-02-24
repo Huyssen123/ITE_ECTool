@@ -1,17 +1,17 @@
 #define   TOOLVER   "V2.0"
-//==============================================================================
+//===========================================================================
 // V2.0
 // 1. Modify for support IT-557x 6K RAM
-//==============================================================================
+//===========================================================================
 
 
-//==============================================================================
+//===========================================================================
 // V1.0
 // 1. First release, Has the following functions
 //    a. View EC RAM
 //    b. View Logic Device config
 //    c. Save all EC register
-//==============================================================================
+//===========================================================================
 
 /* Copyright (c) 2011-2099, ZXQ CO. LTD. All rights reserved.
 
@@ -29,7 +29,7 @@
 // Using VS2012 X86 cmd tool to compilation
 // For windows-32/64bit
 
-//=======================================Include file ==========================
+//=======================================Include file ==============================================
 #include <Uefi.h>
 #include <Library/UefiLib.h>
 #include <Library/DebugLib.h>
@@ -58,21 +58,21 @@
 extern EFI_BOOT_SERVICES         *gBS;
 extern EFI_SYSTEM_TABLE          *gST;
 extern EFI_RUNTIME_SERVICES      *gRT;
-//==============================================================================
+//==================================================================================================
 
-//========================================Type Define ==========================
+//========================================Type Define ==============================================
 typedef unsigned char   BYTE;
 typedef unsigned char   UINT8;
 
 
-//==============================================================================
+//==================================================================================================
 
-//==========================The hardware port to read/write function============
+//==========================The hardware port to read/write function================================
 #define READ_PORT  IoRead8
 #define WRITE_PORT IoWrite8
-//==============================================================================
+//==================================================================================================
 
-//======================================== PM channel ==========================
+//======================================== PM channel ==============================================
 #define PM_STATUS_PORT66          0x66
 #define PM_CMD_PORT66             0x66
 #define PM_DATA_PORT62            0x62
@@ -128,29 +128,29 @@ UINT8 ECRAMReadByte_PM(UINT8 index)
     Send_data_by_PM(index);
     return Read_data_from_PM();
 }
-//==============================================================================
+//==================================================================================================
 
 
-//=======================================EC Direct Access interface=============
+//=======================================EC Direct Access interface=================================
 //Port Config:
-//  BADRSEL(0x200A) bit1-0  Addr    Data
-//                  00      2Eh     2Fh
-//                  01      4Eh     4Fh
+//	BADRSEL(0x200A) bit1-0	Addr	Data
+//					00		2Eh		2Fh
+//					01		4Eh		4Fh
 //
-//              01      4Eh     4Fh
-//  ITE-EC Ram Read/Write Algorithm:
-//  Addr    w   0x2E
-//  Data    w   0x11
-//  Addr    w   0x2F
-//  Data    w   high byte
-//  Addr    w   0x2E
-//  Data    w   0x10
-//  Addr    w   0x2F
-//  Data    w   low byte
-//  Addr    w   0x2E
-//  Data    w   0x12
-//  Addr    w   0x2F
-//  Data    rw  value
+//				01		4Eh		4Fh
+//	ITE-EC Ram Read/Write Algorithm:
+//	Addr 	w	0x2E
+//	Data 	w	0x11
+//	Addr	w	0x2F
+//	Data	w	high byte
+//	Addr	w	0x2E
+//	Data	w	0x10
+//	Addr	w	0x2F
+//	Data	w	low byte
+//	Addr	w	0x2E
+//	Data	w	0x12
+//	Addr	w	0x2F
+//	Data	rw	value
 UINT8 EC_ADDR_PORT = 0x4E;   // 0x2E or 0x4E
 UINT8 EC_DATA_PORT = 0x4F;   // 0x2F or 0x4F
 UINT8 High_Byte    = 0;
@@ -191,9 +191,9 @@ UINT8 ECRAMReadByte(UINT8 index)
     WRITE_PORT(EC_ADDR_PORT, 0x2F);
     return READ_PORT(EC_DATA_PORT);         //Low byte
 }
-//==============================================================================
+//==================================================================================================
 
-//=======================================SIO Access interface===================
+//=======================================SIO Access interface=======================================
 UINT8  CurrentLDN       =0x01;
 
 UINT8 ReadSIOReg(UINT8 offset)
@@ -216,9 +216,9 @@ void SelectLDN()
     WRITE_PORT(EC_ADDR_PORT, 0x07);
     WRITE_PORT(EC_DATA_PORT, CurrentLDN);
 }
-//==============================================================================
+//==================================================================================================
 
-//=======================================Decicated I/O Port Operation===========
+//=======================================Decicated I/O Port Operation===============================
 // Need EC code configuration and need BIOS decode I/O
 #define HIGH_BYTE_PORT    0xA01
 #define LOW_BYTE_PORT     HIGH_BYTE_PORT+1
@@ -237,9 +237,9 @@ void ECRAMWriteByte_DeIO(UINT8 index, UINT8 data)
     WRITE_PORT(LOW_BYTE_PORT, index);
     WRITE_PORT(DATA_BYTE_PORT, data);
 }
-//==============================================================================
+//==================================================================================================
 
-//===============================Console control interface======================
+//===============================Console control interface==========================================
 void SetTextColor(UINT8 TextColor, UINT8 BackColor)
 {
     gST->ConOut->SetAttribute (gST->ConOut, EFI_TEXT_ATTR (TextColor, BackColor));
@@ -251,7 +251,7 @@ void SetPosition_X_Y(UINT8 PositionX, UINT8 PositionY)
                                    PositionX,
                                    PositionY);
 }
-//==============================================================================
+//==================================================================================================
 
 //  Example:
 //	ECRamWrite_Direct(0x51,0x90);
@@ -285,7 +285,7 @@ void SetPosition_X_Y(UINT8 PositionX, UINT8 PositionY)
 #define EC_RAM_READ      ECRAMReadByte
 #define BYTE  char
 #define WORD  int
-//==============================================================================
+//==================================================================================================
 
 #define STALL_MS       1000
 #define KEY_NULL       0x0000
@@ -374,7 +374,7 @@ typedef struct Menu_1
 }*pMenu1STRUCT;
 
 
-//==============================================================================
+//==================================================================================================
 #define GUI_X  1           // The position_X of the menu
 #define GUI_Y  1           // The position_Y of the menu
 
@@ -429,32 +429,32 @@ ItemSTRUCT Item2_Array[]=
 ItemSTRUCT Item3_Array[]=
 {
     {NULL,NULL,                                26}, // This is item count
-    {"0x8000", "uC SFR",    0x8000, Item3_X, GUI_Y+ 1},
-    {"0xC000", "UC RAM",    0xC000, Item3_X, GUI_Y+ 2},
-    {"0x0000", "SRAM-0",    0x0000, Item3_X, GUI_Y+ 3},
-    {"0x0100", "SRAM-1",    0x0100, Item3_X, GUI_Y+ 4},
-    {"0x0200", "SRAM-2",    0x0200, Item3_X, GUI_Y+ 5},
-    {"0x0300", "SRAM-3",    0x0300, Item3_X, GUI_Y+ 6},
-    {"0x0400", "SRAM-4",    0x0400, Item3_X, GUI_Y+ 7},
-    {"0x0500", "SRAM-5",    0x0500, Item3_X, GUI_Y+ 8},
-    {"0x0600", "SRAM-6",    0x0600, Item3_X, GUI_Y+ 9},
-    {"0x0700", "SRAM-7",    0x0700, Item3_X, GUI_Y+10},
-    {"0x0800", "SRAM-8",    0x0800, Item3_X, GUI_Y+11},
-    {"0x0900", "SRAM-9",    0x0900, Item3_X, GUI_Y+12},
-    {"0x0A00", "SRAM-A",    0x0A00, Item3_X, GUI_Y+13},
-    {"0x0B00", "SRAM-B",    0x0B00, Item3_X, GUI_Y+14},
-    {"0x0C00", "SRAM-C",    0x0C00, Item3_X, GUI_Y+15},
-    {"0x0D00", "SRAM-D",    0x0D00, Item3_X, GUI_Y+16},
-    {"0x0E00", "SRAM-E",    0x0E00, Item3_X, GUI_Y+17},
-    {"0x0F00", "SRAM-F",    0x0F00, Item3_X, GUI_Y+18},
-    {"0xD000", "SRAM-G",    0x0F00, Item3_X, GUI_Y+19},
-    {"0xD100", "SRAM-H",    0x0F00, Item3_X, GUI_Y+20},
-    {"0xD200", "SRAM-I",    0x0F00, Item3_X, GUI_Y+21},
-    {"0xD300", "SRAM-J",    0x0F00, Item3_X, GUI_Y+22},
-    {"0xD400", "SRAM-K",    0x0F00, Item3_X, GUI_Y+23},
-    {"0xD500", "SRAM-L",    0x0F00, Item3_X, GUI_Y+24},
-    {"0xD600", "SRAM-M",    0x0F00, Item3_X, GUI_Y+25},
-    {"0xD700", "SRAM-N",    0x0F00, Item3_X, GUI_Y+26},
+    {"0x8000", "uC SFR",   0x8000, Item3_X, GUI_Y+ 1},
+    {"0xE000", "UC RAM",   0xE000, Item3_X, GUI_Y+ 2},
+    {"0x0000", "SRAM-0",    0xC000, Item3_X, GUI_Y+ 3},
+    {"0x0100", "SRAM-1",    0xC100, Item3_X, GUI_Y+ 4},
+    {"0x0200", "SRAM-2",    0xC200, Item3_X, GUI_Y+ 5},
+    {"0x0300", "SRAM-3",    0xC300, Item3_X, GUI_Y+ 6},
+    {"0x0400", "SRAM-4",    0xC400, Item3_X, GUI_Y+ 7},
+    {"0x0500", "SRAM-5",    0xC500, Item3_X, GUI_Y+ 8},
+    {"0x0600", "SRAM-6",    0xC600, Item3_X, GUI_Y+ 9},
+    {"0x0700", "SRAM-7",    0xC700, Item3_X, GUI_Y+10},
+    {"0x0800", "SRAM-8",    0xC800, Item3_X, GUI_Y+11},
+    {"0x0900", "SRAM-9",    0xC900, Item3_X, GUI_Y+12},
+    {"0x0A00", "SRAM-A",    0xCA00, Item3_X, GUI_Y+13},
+    {"0x0B00", "SRAM-B",    0xCB00, Item3_X, GUI_Y+14},
+    {"0x0C00", "SRAM-C",    0xCC00, Item3_X, GUI_Y+15},
+    {"0x0D00", "SRAM-D",    0xCD00, Item3_X, GUI_Y+16},
+    {"0x0E00", "SRAM-E",    0xCE00, Item3_X, GUI_Y+17},
+    {"0x0F00", "SRAM-F",    0xCF00, Item3_X, GUI_Y+18},
+    {"0xD000", "SRAM-G",    0xD000, Item3_X, GUI_Y+19},
+    {"0xD100", "SRAM-H",    0xD100, Item3_X, GUI_Y+20},
+    {"0xD200", "SRAM-I",    0xD200, Item3_X, GUI_Y+21},
+    {"0xD300", "SRAM-J",    0xD300, Item3_X, GUI_Y+22},
+    {"0xD400", "SRAM-K",    0xD400, Item3_X, GUI_Y+23},
+    {"0xD500", "SRAM-L",    0xD500, Item3_X, GUI_Y+24},
+    {"0xD600", "SRAM-M",    0xD600, Item3_X, GUI_Y+25},
+    {"0xD700", "SRAMN",    0xD700, Item3_X, GUI_Y+26},
     {NULL,NULL}
 };
 
@@ -491,7 +491,7 @@ struct Menu_1 Menu1_Array[]=
     {"Exit(ESC) ", GUI_X+65, GUI_Y, NULL},
     {NULL, 0, 0, NULL}
 };
-//==============================================================================
+//==================================================================================================
 
 #define ECRAM_X   (GUI_X+4)
 #define ECRAM_Y   (GUI_Y+5)
@@ -1100,12 +1100,11 @@ void Config_Chip()
 {
     UINT8 ConfigData;
     UINT8 i;
-    // ITE IT-557x chip is DLM architecture for EC  RAM and It's support 
-    // 6K/8K RAM. If used RAM less than 4K, you can access EC RAM form 
-    // 0x000--0xFFF by 4E/4F IO port.
-    // If used RAM more than 4K, RAM address change to 0xC000.
-    // If you want to access EC RAM by 4E/4F IO port, you must set as 
-    // follow register first REG_1060[BIT7]
+    // ITE IT-557x chip is DLM architecture for EC  RAM and It's support 6K/8K RAM.
+    // If used RAM less  than 4K, you can access EC RAM form 0x000--0xFFF by 4E/4F IO port
+    // If used RAM more than 4K, RAM address change to 0xC000
+    // If you want to access EC RAM by 4E/4F IO port, you must set as follow register first
+    // REG_1060[BIT7]
     if(0x55==EC_CHIP_ID1)
     {
         High_Byte = 0x20;
@@ -1113,32 +1112,24 @@ void Config_Chip()
         ConfigData = ConfigData | 0x80;
         EC_RAM_WRITE(0x60, ConfigData);
         
-        // Modify Item3 count to 26, DLM have 6K RAM
+        // Modify Item3 count to 26
         Item3_Array[0].Addr_Num = 26;
         
-        //
-        Item3_Array[2].Addr_Num = 0xE000;
-        
         // Modify Item address
-        for(i=3; i<19; i++) // EC RAM base is 0xC000
-        {
-            Item3_Array[i].Addr_Num = 0xC000 + (i-3)*0x100;
-        }
-        
-        // Modify Item address
-        for(i=19; NULL!=Item3_Array[i].Addr_Name; i++) // EC RAM base is 0xD000
+        for(i=19; NULL!=Item3_Array[i].Addr_Name; i++) // EC RAM 0xD000
         {
             Item3_Array[i].Addr_Num = 0xD000 + (i-19)*0x100;
         }
+        Item3_Array[2].Addr_Num = 0xE000;
     }
     else
     {
-        // Modify Item3 count to 18, it have 4K RAM
+        // Modify Item3 count to 18
         Item3_Array[0].Addr_Num = 18;
     }
 }
 /*
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 BYTE PcIoReadB(DWORD Address)
 {
     return (BYTE)inp((DWORD)Address);
@@ -1170,7 +1161,7 @@ void WriteSioReg(BYTE Ldn, BYTE offset, BYTE data)
     PcIoWriteB(Sio_index, offset);
     PcIoWriteB((Sio_index+1), data);
 }
-//------------------------------------------------------------------------------
+//--------------------------------------------------------------------------------------------------
 */
 
 int main(int Argc, char **Argv)
