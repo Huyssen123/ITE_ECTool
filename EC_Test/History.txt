@@ -1,0 +1,91 @@
+*****************************************************************************
+version      : V3.2
+Compiler     : VS2012/cl.exe
+Compiler cmd : cl.exe EC_Test_Tool.cpp /EHsc
+Build Date   : 2020.11.20
+*****************************************************************************
+1. Add cmd for enable/disable power on WDT
+
+
+*****************************************************************************
+version      : V3.1
+Compiler     : VS2012/cl.exe
+Compiler cmd : cl.exe EC_Test_Tool.cpp /EHsc
+Build Date   : 2020.11.05
+*****************************************************************************
+1. Add cmd for read/write EC RAM by 4E4F port
+
+*****************************************************************************
+version      : V3.0
+Compiler     : VS2012/cl.exe
+Compiler cmd : cl.exe EC_Test_Tool.cpp /EHsc
+Build Date   : 2020.07.23
+*****************************************************************************
+1. Modify tool version to V3.0
+
+*****************************************************************************
+version      : V2.7.6
+Compiler     : VS2012/cl.exe
+Compiler cmd : cl.exe EC_Test_Tool.cpp /EHsc
+Build Date   : 2020.07.22
+*****************************************************************************
+1. Modify One Key test method
+
+
+*****************************************************************************
+version      : V2.7.5
+Compiler     : VS2012/cl.exe
+Compiler cmd : cl.exe EC_Test_Tool.cpp /EHsc
+Build Date   : 2020.07.02
+*****************************************************************************
+1.Add KB country Layout setting
+
+
+*****************************************************************************
+version      : V2.7.4
+Compiler     : VS2012/cl.exe
+Compiler cmd : cl.exe EC_Test_Tool.cpp /EHsc
+Build Date   : 2020.06.28
+*****************************************************************************
+1. Modify battery FUD clear and get command
+
+
+
+*****************************************************************************
+version      : V2.7.3
+Compiler     : VS2012/cl.exe
+Compiler cmd : cl.exe EC_Test_Tool.cpp /EHsc
+Build Date   : 2020.06.12
+*****************************************************************************
+1. Add command for Vol+/- button test
+
+
+
+*****************************************************************************
+version      : V2.7.2
+Compiler     : VS2012/cl.exe
+Compiler cmd : cl.exe EC_Test_Tool.cpp /EHsc
+Build Date   : 2020.06.10
+*****************************************************************************
+1. Add command for read/write EC RAM/Register
+
+
+
+*****************************************************************************
+version      : V2.7.1
+Compiler     : VS2012/cl.exe
+Compiler cmd : cl.exe EC_Test_Tool.cpp /EHsc
+Build Date   : 2020.05.18
+*****************************************************************************
+1. Modify battery version information display.
+   The version display same as the Lenovo VANTAGE
+
+
+
+*****************************************************************************
+version      : V2.7
+Compiler     : VS2012/cl.exe
+Compiler cmd : cl.exe EC_Test_Tool.cpp /EHsc
+Build Date   : 2020.05.15
+*****************************************************************************
+1. Add command for set charger current
