@@ -31,7 +31,6 @@
 #include <time.h>
 #include <conio.h>
 #include <wincon.h>
-#include <Powrprof.h>
 #include <Winbase.h>
 
 using namespace std;
@@ -39,7 +38,6 @@ using namespace std;
 //#pragma comment(lib,"WinIo.lib")       // For 32bit
 #pragma comment(lib,"WinIox64.lib")    // For 64bit
 
-#pragma comment(lib, "Powrprof.lib")
 //==================================================================================================
 
 //========================================Type Define ==============================================
@@ -472,7 +470,7 @@ void Help(void)
     printf("=                             --%s           =\n", __DATE__);
     printf("=                                                     =\n");
     printf("=     /W_RAM  /6266  Address(Hex)  Data(Hex)          =\n");
-    printf("=     /R_RAM  /686C  Address(Hex)  Data(Hex)          =\n");
+    printf("=     /R_RAM  /686C  Address(Hex)                     =\n");
     printf("=     /R_RAM  /4E4F  Address(Hex)  Data(Hex)          =\n");
     printf("=                                                     =\n");
     printf("=                                                     =\n");
@@ -487,17 +485,12 @@ UINT8 ReadWrite_EC_RAM(int Argc, char **Argv)
     unsigned short RAM_Data;
     char *str;
     
-    if(5!=Argc)
-    {
-        return 0;
-    }
-    
     IO_RW_Flag = 0;
     if(!strcmp("/6266",Argv[2]))
     {
-        PM_STATUS_PORT66 =0x6C;
-        PM_CMD_PORT66    =0x6C;
-        PM_DATA_PORT62   =0x68; // Set port is 686C
+        PM_STATUS_PORT66 =0x66;
+        PM_CMD_PORT66    =0x66;
+        PM_DATA_PORT62   =0x62; // Set port is 686C
     }
     else if(!strcmp("/686C",Argv[2]))
     {
@@ -522,8 +515,14 @@ UINT8 ReadWrite_EC_RAM(int Argc, char **Argv)
         return 0;
     }
     
-    RAM_Address = (unsigned short)strtol(Argv[3], &str, 16);
-    RAM_Data = (unsigned short)strtol(Argv[4], &str, 16);
+	if(Argv[3])
+	{
+		RAM_Address = (unsigned short)strtol(Argv[3], &str, 16);
+	}
+	if(Argv[4])
+	{
+		RAM_Data = (unsigned short)strtol(Argv[4], &str, 16);
+	}
     
     // Write
     if(1==EC_RAM_RW_Flag)
@@ -603,7 +602,7 @@ int main(int Argc, char *Argv[])
     }
     
     SetTextColor(EFI_WHITE, EFI_BLACK);
-    ToolInit();
+    //ToolInit();
     
     
     if(EC_RAM_RW_Flag)
